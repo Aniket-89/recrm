@@ -1,0 +1,484 @@
+/* ================================================================== */
+/*  REAL ESTATE CRM — GLOBAL STYLES                                    */
+/* ================================================================== */
+
+/* ─── Dashboard Layout ──────────────────────────────────────────── */
+
+.re-dash-loading {
+	text-align: center;
+	padding: 80px 0;
+}
+
+.re-dash-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 15px 40px;
+}
+
+.re-dash-greeting {
+	margin-bottom: 24px;
+}
+
+.re-dash-greeting h3 {
+	font-weight: 700;
+	font-size: 1.5em;
+	margin-bottom: 4px;
+	color: var(--text-color);
+}
+
+.re-dash-greeting p {
+	margin: 0;
+	font-size: 0.95em;
+}
+
+/* ─── KPI Cards Grid ────────────────────────────────────────────── */
+
+.re-dash-kpi-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 16px;
+	margin-bottom: 24px;
+}
+
+.re-dash-kpi-card {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #e2e8f0);
+	border-radius: 8px;
+	padding: 16px;
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.re-dash-kpi-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	transform: translateY(-1px);
+}
+
+.re-dash-kpi-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	flex-shrink: 0;
+}
+
+.re-dash-kpi-body {
+	min-width: 0;
+}
+
+.re-dash-kpi-label {
+	font-size: 0.75em;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 500;
+	margin-bottom: 2px;
+}
+
+.re-dash-kpi-value {
+	font-size: 1.35em;
+	font-weight: 700;
+	color: var(--text-color);
+	line-height: 1.2;
+}
+
+.re-dash-kpi-subtitle {
+	font-size: 0.75em;
+	color: var(--text-muted);
+	margin-top: 2px;
+}
+
+/* ─── Dashboard Cards ───────────────────────────────────────────── */
+
+.re-dash-card {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #e2e8f0);
+	border-radius: 8px;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.re-dash-card-danger {
+	border-left: 3px solid var(--red-500, #e24c4c);
+}
+
+.re-dash-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 18px;
+	border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.re-dash-card-header h6 {
+	margin: 0;
+	font-weight: 600;
+	font-size: 0.95em;
+	color: var(--text-color);
+}
+
+.re-dash-card-header h6 i {
+	margin-right: 6px;
+}
+
+.re-dash-card-body {
+	padding: 16px 18px;
+}
+
+.re-dash-link {
+	font-size: 0.8em;
+	color: var(--primary, #2490ef);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.re-dash-link:hover {
+	text-decoration: underline;
+}
+
+/* ─── Two-column Row ────────────────────────────────────────────── */
+
+.re-dash-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+@media (max-width: 768px) {
+	.re-dash-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ─── Dashboard Tables ──────────────────────────────────────────── */
+
+.re-dash-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.85em;
+}
+
+.re-dash-table thead th {
+	padding: 8px 12px;
+	font-weight: 600;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	font-size: 0.8em;
+	letter-spacing: 0.5px;
+	border-bottom: 2px solid var(--border-color, #e2e8f0);
+	white-space: nowrap;
+}
+
+.re-dash-table tbody td {
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--border-color, #f0f0f0);
+	vertical-align: middle;
+}
+
+.re-dash-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.re-dash-table tbody tr:hover {
+	background: var(--bg-light-gray, #f8fafc);
+}
+
+.re-dash-table a {
+	color: var(--primary, #2490ef);
+	font-weight: 500;
+}
+
+/* ─── Status Badges ─────────────────────────────────────────────── */
+
+.re-dash-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 0.8em;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.re-dash-badge.green {
+	background: #dcfce7;
+	color: #166534;
+}
+
+.re-dash-badge.blue {
+	background: #dbeafe;
+	color: #1e40af;
+}
+
+.re-dash-badge.purple {
+	background: #ede9fe;
+	color: #5b21b6;
+}
+
+.re-dash-badge.yellow {
+	background: #fef9c3;
+	color: #854d0e;
+}
+
+.re-dash-badge.red {
+	background: #fee2e2;
+	color: #991b1b;
+}
+
+.re-dash-badge.gray {
+	background: #f1f5f9;
+	color: #475569;
+}
+
+.re-dash-badge.orange {
+	background: #fff7ed;
+	color: #9a3412;
+}
+
+/* ─── Progress Bar ──────────────────────────────────────────────── */
+
+.re-dash-progress {
+	height: 6px;
+	background: var(--border-color, #e2e8f0);
+	border-radius: 3px;
+	overflow: hidden;
+	margin-bottom: 2px;
+}
+
+.re-dash-progress-bar {
+	height: 100%;
+	background: linear-gradient(90deg, #2490ef, #7c3aed);
+	border-radius: 3px;
+	transition: width 0.4s ease;
+}
+
+/* ─── List Items ────────────────────────────────────────────────── */
+
+.re-dash-list {
+	padding: 0 !important;
+}
+
+.re-dash-list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 18px;
+	border-bottom: 1px solid var(--border-color, #f0f0f0);
+}
+
+.re-dash-list-item:last-child {
+	border-bottom: none;
+}
+
+.re-dash-list-item:hover {
+	background: var(--bg-light-gray, #f8fafc);
+}
+
+.re-dash-list-main {
+	min-width: 0;
+}
+
+.re-dash-list-title {
+	font-weight: 600;
+	font-size: 0.9em;
+	color: var(--primary, #2490ef);
+}
+
+.re-dash-list-meta {
+	font-size: 0.8em;
+	color: var(--text-muted);
+	margin-top: 2px;
+}
+
+.re-dash-list-right {
+	text-align: right;
+	flex-shrink: 0;
+	margin-left: 12px;
+}
+
+.re-dash-list-amount {
+	font-weight: 700;
+	font-size: 0.95em;
+}
+
+/* ─── Chart Legend ──────────────────────────────────────────────── */
+
+.re-dash-chart-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding-top: 8px;
+	justify-content: center;
+}
+
+.re-dash-legend-item {
+	font-size: 0.8em;
+	color: var(--text-muted);
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.re-dash-legend-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+/* ─── Empty State ───────────────────────────────────────────────── */
+
+.re-dash-empty-state {
+	text-align: center;
+	padding: 30px 0;
+}
+
+/* ================================================================== */
+/*  CRM SIDEBAR                                                        */
+/* ================================================================== */
+
+.re-crm-sidebar {
+	position: fixed;
+	left: 0;
+	top: var(--navbar-height, 56px);
+	bottom: 0;
+	width: 220px;
+	background: var(--card-bg, #fff);
+	border-right: 1px solid var(--border-color, #e2e8f0);
+	z-index: 1000;
+	overflow-y: auto;
+	transition: transform 0.2s ease;
+	padding: 12px 0;
+}
+
+.re-crm-sidebar .re-sidebar-brand {
+	padding: 12px 18px 16px;
+	font-weight: 700;
+	font-size: 1em;
+	color: var(--primary, #2490ef);
+	border-bottom: 1px solid var(--border-color, #e2e8f0);
+	margin-bottom: 8px;
+}
+
+.re-crm-sidebar .re-sidebar-brand i {
+	margin-right: 6px;
+}
+
+.re-crm-sidebar .re-sidebar-section {
+	padding: 8px 18px 4px;
+	font-size: 0.7em;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: var(--text-muted);
+	font-weight: 600;
+}
+
+.re-crm-sidebar .re-sidebar-item {
+	display: flex;
+	align-items: center;
+	padding: 8px 18px;
+	color: var(--text-color);
+	text-decoration: none;
+	font-size: 0.85em;
+	font-weight: 500;
+	transition: background 0.1s, color 0.1s;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.re-crm-sidebar .re-sidebar-item:hover {
+	background: var(--bg-light-gray, #f0f4f8);
+	color: var(--primary, #2490ef);
+	text-decoration: none;
+}
+
+.re-crm-sidebar .re-sidebar-item.active {
+	background: var(--primary, #2490ef);
+	color: #fff;
+	border-radius: 0;
+}
+
+.re-crm-sidebar .re-sidebar-item i {
+	width: 18px;
+	text-align: center;
+	font-size: 0.95em;
+	opacity: 0.7;
+}
+
+.re-crm-sidebar .re-sidebar-item:hover i,
+.re-crm-sidebar .re-sidebar-item.active i {
+	opacity: 1;
+}
+
+.re-crm-sidebar .re-sidebar-divider {
+	height: 1px;
+	background: var(--border-color, #e2e8f0);
+	margin: 8px 18px;
+}
+
+/* Push main content right when sidebar is visible */
+body.re-has-sidebar .layout-main,
+body.re-has-sidebar .container,
+body.re-has-sidebar #page-container {
+	margin-left: 220px;
+}
+
+body.re-has-sidebar .navbar {
+	padding-left: 220px;
+}
+
+/* Hide Frappe's default sidebar when CRM sidebar is active */
+body.re-has-sidebar .layout-side-section {
+	display: none !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 992px) {
+	.re-crm-sidebar {
+		transform: translateX(-100%);
+	}
+
+	.re-crm-sidebar.re-sidebar-open {
+		transform: translateX(0);
+	}
+
+	body.re-has-sidebar .layout-main,
+	body.re-has-sidebar .container,
+	body.re-has-sidebar #page-container {
+		margin-left: 0;
+	}
+
+	body.re-has-sidebar .navbar {
+		padding-left: 0;
+	}
+}
+
+/* Toggle button for mobile */
+.re-sidebar-toggle {
+	display: none;
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	z-index: 1001;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: var(--primary, #2490ef);
+	color: #fff;
+	border: none;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	font-size: 18px;
+	cursor: pointer;
+}
+
+@media (max-width: 992px) {
+	.re-sidebar-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

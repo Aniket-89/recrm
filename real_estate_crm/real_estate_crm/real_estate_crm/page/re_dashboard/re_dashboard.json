@@ -1,8 +1,8 @@
 {
-  "name": "customer-360",
+  "name": "re-dashboard",
   "doctype": "Page",
-  "page_name": "customer-360",
-  "title": "Customer 360",
+  "page_name": "re-dashboard",
+  "title": "Real Estate Dashboard",
   "module": "Real Estate CRM",
   "standard": "Yes",
   "roles": [

@@ -1,5 +1,6 @@
 {
   "name": "Real Estate",
+  "doctype": "Workspace",
   "module": "Real Estate CRM",
   "label": "Real Estate",
   "title": "Real Estate",

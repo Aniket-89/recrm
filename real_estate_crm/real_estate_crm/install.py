@@ -16,12 +16,14 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 def after_install():
     create_custom_fields()
     create_chart_of_accounts()
+    hide_default_workspaces()
     frappe.db.commit()
 
 
 def after_migrate():
     """Re-apply custom fields so they survive ERPNext core upgrades."""
     create_custom_fields()
+    hide_default_workspaces()
     frappe.db.commit()
 
 
@@ -194,3 +196,26 @@ def _root_account(company, root_type):
         {"company": company, "root_type": root_type, "parent_account": ("is", "not set")},
         "name",
     )
+
+
+# ─── Hide Default Workspaces ────────────────────────────────────────────────
+
+
+def hide_default_workspaces():
+    """
+    Hides all default ERPNext/Frappe workspaces except our Real Estate one.
+    This makes the CRM the only visible module in the sidebar.
+    Idempotent — safe to call on every migrate.
+    """
+    our_workspaces = ["Real Estate"]
+    try:
+        all_workspaces = frappe.get_all(
+            "Workspace",
+            filters={"is_standard": 1, "name": ["not in", our_workspaces]},
+            pluck="name",
+        )
+        for ws_name in all_workspaces:
+            frappe.db.set_value("Workspace", ws_name, "public", 0, update_modified=False)
+    except Exception:
+        # If Workspace table doesn't exist yet (fresh install), skip silently
+        pass

@@ -1,6 +1,7 @@
 [
   {
     "doctype": "RE Payment Plan Template",
+    "name": "DOWN",
     "plan_name": "Down Payment Plan",
     "plan_code": "DOWN",
     "description": "Standard 3-stage plan: 10% booking, 80% at 30 days, 10% on possession.",
@@ -36,6 +37,7 @@
   },
   {
     "doctype": "RE Payment Plan Template",
+    "name": "DEV_LINKED",
     "plan_name": "Development Linked Plan",
     "plan_code": "DEV_LINKED",
     "description": "5-stage development-linked plan. Possession stage set to 10% (client confirmed). Total = 100%. Adjust here if client revises.",

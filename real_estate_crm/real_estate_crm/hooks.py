@@ -9,6 +9,19 @@ app_version = "0.0.1"
 # ERPNext is a hard dependency — this app cannot run standalone
 required_apps = ["frappe", "erpnext"]
 
+# ─── Default Route ────────────────────────────────────────────────────────────
+# When a user logs in, land on the CRM dashboard instead of the default desk.
+default_route = "/app/re-dashboard"
+
+# ─── Global Assets ────────────────────────────────────────────────────────────
+# Loaded on every page — used for the persistent CRM sidebar and styling.
+app_include_js = [
+    "public/js/re_sidebar.js",
+]
+app_include_css = [
+    "public/css/re_crm.css",
+]
+
 # ─── Install / Migrate ───────────────────────────────────────────────────────
 
 after_install = "real_estate_crm.install.after_install"
