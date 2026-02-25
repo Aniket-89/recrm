@@ -1,0 +1,2 @@
+# Patches are listed here in the format: app.module.patch_file.execute
+# Example: real_estate_crm.patches.v1_0.some_patch.execute

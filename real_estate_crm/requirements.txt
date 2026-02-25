@@ -1,0 +1,1 @@
+# No external dependencies — uses only Frappe/ERPNext built-ins (per PRD §15)

@@ -1,0 +1,186 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-02-25 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rm_name",
+  "rm_code",
+  "status",
+  "naming_series",
+  "column_break_1",
+  "mobile",
+  "email",
+  "designation",
+  "joining_date",
+  "section_break_employee",
+  "employee",
+  "profile_photo",
+  "section_break_projects",
+  "assigned_projects",
+  "section_break_notes",
+  "notes",
+  "section_break_dashboard",
+  "dashboard_html"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "rm_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "description": "Short code for this RM — auto-generated from initials if left blank.",
+   "fieldname": "rm_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "RM Code",
+   "unique": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nInactive",
+   "reqd": 1
+  },
+  {
+   "default": "RM-.YYYY.-.####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "RM-.YYYY.-.####"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Joining Date"
+  },
+  {
+   "fieldname": "section_break_employee",
+   "fieldtype": "Section Break",
+   "label": "ERPNext Link"
+  },
+  {
+   "description": "Link to an ERPNext Employee record if this RM is also an employee.",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "profile_photo",
+   "fieldtype": "Attach Image",
+   "label": "Profile Photo"
+  },
+  {
+   "fieldname": "section_break_projects",
+   "fieldtype": "Section Break",
+   "label": "Assigned Projects"
+  },
+  {
+   "fieldname": "assigned_projects",
+   "fieldtype": "Table MultiSelect",
+   "label": "Projects",
+   "options": "RE RM Project"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "section_break_dashboard",
+   "fieldtype": "Section Break",
+   "label": "Performance Dashboard"
+  },
+  {
+   "fieldname": "dashboard_html",
+   "fieldtype": "HTML",
+   "label": "Dashboard",
+   "options": "<div id='rm-dashboard-placeholder' class='text-muted small'>Save the record to view performance stats.</div>"
+  }
+ ],
+ "links": [],
+ "modified": "2026-02-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Real Estate CRM",
+ "name": "RE Relationship Manager",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "role": "RE Sales Manager"
+  },
+  {
+   "read": 1,
+   "role": "RE Sales Executive"
+  },
+  {
+   "read": 1,
+   "role": "RE Accounts"
+  },
+  {
+   "read": 1,
+   "role": "RE RM"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "rm_name",
+ "track_changes": 1
+}

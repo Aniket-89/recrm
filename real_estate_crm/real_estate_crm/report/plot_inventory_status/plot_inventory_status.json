@@ -1,0 +1,10 @@
+{
+  "name": "Plot Inventory Status",
+  "doctype": "Report",
+  "report_name": "Plot Inventory Status",
+  "report_type": "Script Report",
+  "module": "Real Estate Crm",
+  "is_standard": "Yes",
+  "ref_doctype": "RE Plot",
+  "disabled": 0
+}

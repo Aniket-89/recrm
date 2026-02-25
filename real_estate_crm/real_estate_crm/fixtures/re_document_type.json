@@ -1,0 +1,62 @@
+[
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Application Form",
+    "is_mandatory": 1,
+    "applicable_to": "Booking"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "ID Proof",
+    "is_mandatory": 1,
+    "applicable_to": "Customer"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Address Proof",
+    "is_mandatory": 1,
+    "applicable_to": "Customer"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Booking Agreement",
+    "is_mandatory": 1,
+    "applicable_to": "Booking"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Payment Receipt",
+    "is_mandatory": 0,
+    "applicable_to": "Booking"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Sale Deed",
+    "is_mandatory": 0,
+    "applicable_to": "Booking"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "NOC",
+    "is_mandatory": 0,
+    "applicable_to": "Both"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Power of Attorney",
+    "is_mandatory": 0,
+    "applicable_to": "Customer"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Plot Map",
+    "is_mandatory": 0,
+    "applicable_to": "Booking"
+  },
+  {
+    "doctype": "RE Document Type",
+    "document_type_name": "Other",
+    "is_mandatory": 0,
+    "applicable_to": "Both"
+  }
+]

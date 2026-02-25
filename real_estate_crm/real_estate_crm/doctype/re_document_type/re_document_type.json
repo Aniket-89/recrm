@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "autoname": "field:document_type_name",
+ "creation": "2026-02-25 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "document_type_name",
+  "is_mandatory",
+  "applicable_to"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "document_type_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Document Type Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "applicable_to",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Applicable To",
+   "options": "\nCustomer\nBooking\nBoth"
+  }
+ ],
+ "links": [],
+ "modified": "2026-02-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Real Estate CRM",
+ "name": "RE Document Type",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "export": 1,
+   "report": 1,
+   "role": "RE Sales Manager"
+  },
+  {
+   "read": 1,
+   "role": "RE Sales Executive"
+  },
+  {
+   "read": 1,
+   "role": "RE Accounts"
+  },
+  {
+   "read": 1,
+   "role": "RE RM"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "document_type_name",
+ "track_changes": 0
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Overdue Payment Report",
+  "doctype": "RE Booking",
+  "report_name": "Overdue Payment Report",
+  "report_type": "Script Report",
+  "module": "Real Estate Crm",
+  "is_standard": "Yes",
+  "ref_doctype": "RE Booking",
+  "disabled": 0
+}

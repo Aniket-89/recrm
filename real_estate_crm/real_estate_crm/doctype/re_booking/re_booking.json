@@ -1,0 +1,239 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-02-25 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "booking_date",
+  "project",
+  "plot",
+  "customer",
+  "assigned_rm",
+  "column_break_1",
+  "payment_plan_type",
+  "booking_status",
+  "possession_date",
+  "section_break_financial",
+  "plot_value",
+  "discount",
+  "column_break_2",
+  "final_value",
+  "section_break_schedule",
+  "payment_schedule",
+  "section_break_docs",
+  "booking_documents",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "default": "BK-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "BK-.YYYY.-.#####\n"
+  },
+  {
+   "default": "Today",
+   "fieldname": "booking_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Booking Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Project",
+   "options": "RE Project",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "plot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Plot",
+   "options": "RE Plot",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "assigned_rm",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Assigned RM",
+   "options": "RE Relationship Manager",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_plan_type",
+   "fieldtype": "Link",
+   "label": "Payment Plan",
+   "options": "RE Payment Plan Template",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "booking_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nBooked\nPayment In Progress\nPossession Due\nCompleted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "description": "Expected possession date. Drives due dates for possession-linked payment stages.",
+   "fieldname": "possession_date",
+   "fieldtype": "Date",
+   "label": "Possession Date"
+  },
+  {
+   "fieldname": "section_break_financial",
+   "fieldtype": "Section Break",
+   "label": "Financial Details"
+  },
+  {
+   "description": "Fetched from the selected plot. Edit to enter a negotiated value.",
+   "fieldname": "plot_value",
+   "fieldtype": "Currency",
+   "label": "Plot Value",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "discount",
+   "fieldtype": "Currency",
+   "label": "Discount"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Plot Value \u2212 Discount. All payment schedule amounts are calculated on this.",
+   "fieldname": "final_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Final Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_schedule",
+   "fieldtype": "Section Break",
+   "label": "Payment Schedule"
+  },
+  {
+   "description": "Auto-generated from the Payment Plan when the booking is submitted.",
+   "fieldname": "payment_schedule",
+   "fieldtype": "Table",
+   "label": "Payment Schedule",
+   "options": "RE Booking Payment Schedule"
+  },
+  {
+   "fieldname": "section_break_docs",
+   "fieldtype": "Section Break",
+   "label": "Document Cabinet"
+  },
+  {
+   "fieldname": "booking_documents",
+   "fieldtype": "Table",
+   "label": "Documents",
+   "options": "RE Document Entry",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Notes",
+   "allow_on_submit": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Real Estate CRM",
+ "name": "RE Booking",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Admin",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Sales Executive"
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Accounts"
+  },
+  {
+   "read": 1,
+   "role": "RE RM"
+  }
+ ],
+ "sort_field": "booking_date",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "customer",
+ "track_changes": 1
+}

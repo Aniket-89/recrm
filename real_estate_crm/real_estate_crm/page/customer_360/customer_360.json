@@ -1,0 +1,15 @@
+{
+  "name": "customer-360",
+  "page_name": "customer-360",
+  "title": "Customer 360",
+  "module": "Real Estate Crm",
+  "standard": "Yes",
+  "roles": [
+    {"role": "RE Admin"},
+    {"role": "RE Sales Manager"},
+    {"role": "RE Sales Executive"},
+    {"role": "RE Accounts"},
+    {"role": "RE RM"},
+    {"role": "System Manager"}
+  ]
+}

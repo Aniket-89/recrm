@@ -1,0 +1,39 @@
+{
+  "name": "Real Estate",
+  "module": "Real Estate Crm",
+  "label": "Real Estate",
+  "title": "Real Estate",
+  "category": "Modules",
+  "is_standard": 1,
+  "for_user": "",
+  "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Real Estate CRM</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RE Project\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RE Plot\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RE Booking\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RE Relationship Manager\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RE Payment Plan Template\",\"col\":4}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Plot Inventory Status\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Collection Report\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Overdue Payment Report\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RM Performance Report\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Register\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer Ledger\",\"col\":4}}]",
+  "shortcuts": [
+    {"type": "DocType", "link_to": "RE Project", "label": "RE Project", "color": "Blue"},
+    {"type": "DocType", "link_to": "RE Plot", "label": "RE Plot", "color": "Green", "stats_filter": "[{\"status\": \"Available\"}]"},
+    {"type": "DocType", "link_to": "RE Booking", "label": "RE Booking", "color": "Orange"},
+    {"type": "DocType", "link_to": "RE Relationship Manager", "label": "RE Relationship Manager", "color": "Purple"},
+    {"type": "DocType", "link_to": "Customer", "label": "Customer", "color": "Cyan"},
+    {"type": "DocType", "link_to": "RE Payment Plan Template", "label": "Payment Plans", "color": "Grey"},
+    {"type": "Report", "link_to": "Plot Inventory Status", "label": "Plot Inventory"},
+    {"type": "Report", "link_to": "Payment Collection Report", "label": "Payment Collection"},
+    {"type": "Report", "link_to": "Overdue Payment Report", "label": "Overdue Payments"},
+    {"type": "Report", "link_to": "RM Performance Report", "label": "RM Performance"},
+    {"type": "Report", "link_to": "Booking Register", "label": "Booking Register"},
+    {"type": "Report", "link_to": "Customer Ledger", "label": "Customer Ledger"}
+  ],
+  "links": [
+    {"type": "DocType", "link_to": "RE Project", "label": "RE Project", "icon": "project"},
+    {"type": "DocType", "link_to": "RE Plot", "label": "RE Plot", "icon": "map-pin"},
+    {"type": "DocType", "link_to": "RE Booking", "label": "RE Booking", "icon": "file"},
+    {"type": "DocType", "link_to": "RE Relationship Manager", "label": "Relationship Manager", "icon": "users"},
+    {"type": "DocType", "link_to": "RE Document Type", "label": "Document Types", "icon": "folder-open"},
+    {"type": "DocType", "link_to": "RE Payment Plan Template", "label": "Payment Plans", "icon": "money"},
+    {"type": "Page", "link_to": "customer-360", "label": "Customer 360\u00b0", "icon": "user"},
+    {"type": "Report", "link_to": "Plot Inventory Status", "label": "Plot Inventory", "icon": "bar-chart"},
+    {"type": "Report", "link_to": "Booking Register", "label": "Booking Register", "icon": "list"},
+    {"type": "Report", "link_to": "Payment Collection Report", "label": "Payment Collection", "icon": "money"},
+    {"type": "Report", "link_to": "RM Performance Report", "label": "RM Performance", "icon": "activity"},
+    {"type": "Report", "link_to": "Overdue Payment Report", "label": "Overdue Payments", "icon": "alert-triangle"},
+    {"type": "Report", "link_to": "Customer Ledger", "label": "Customer Ledger", "icon": "book"}
+  ]
+}

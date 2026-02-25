@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "creation": "2026-02-25 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stage_order",
+  "stage_name",
+  "percentage",
+  "due_trigger",
+  "due_days",
+  "is_possession_stage"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_order",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Order",
+   "reqd": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "% of Final Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_trigger",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Due Trigger",
+   "options": "On Booking\nDays from Booking\nDays from Possession\nOn Possession",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:['Days from Booking','Days from Possession'].includes(doc.due_trigger)",
+   "fieldname": "due_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Due Days"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_possession_stage",
+   "fieldtype": "Check",
+   "label": "Possession Stage"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Real Estate CRM",
+ "name": "RE Payment Plan Stage",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "stage_order",
+ "sort_order": "ASC",
+ "states": []
+}

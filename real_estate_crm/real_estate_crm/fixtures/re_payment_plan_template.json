@@ -1,0 +1,90 @@
+[
+  {
+    "doctype": "RE Payment Plan Template",
+    "plan_name": "Down Payment Plan",
+    "plan_code": "DOWN",
+    "description": "Standard 3-stage plan: 10% booking, 80% at 30 days, 10% on possession.",
+    "stages": [
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "Booking Amount",
+        "stage_order": 1,
+        "percentage": 10.0,
+        "due_trigger": "On Booking",
+        "due_days": 0,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "30-Day Payment",
+        "stage_order": 2,
+        "percentage": 80.0,
+        "due_trigger": "Days from Booking",
+        "due_days": 30,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "Possession Payment",
+        "stage_order": 3,
+        "percentage": 10.0,
+        "due_trigger": "On Possession",
+        "due_days": 0,
+        "is_possession_stage": 1
+      }
+    ]
+  },
+  {
+    "doctype": "RE Payment Plan Template",
+    "plan_name": "Development Linked Plan",
+    "plan_code": "DEV_LINKED",
+    "description": "5-stage development-linked plan. Possession stage set to 10% (client confirmed). Total = 100%. Adjust here if client revises.",
+    "stages": [
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "Booking Amount",
+        "stage_order": 1,
+        "percentage": 10.0,
+        "due_trigger": "On Booking",
+        "due_days": 0,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "60-Day Installment",
+        "stage_order": 2,
+        "percentage": 30.0,
+        "due_trigger": "Days from Booking",
+        "due_days": 60,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "120-Day Installment",
+        "stage_order": 3,
+        "percentage": 30.0,
+        "due_trigger": "Days from Booking",
+        "due_days": 120,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "270-Day Installment",
+        "stage_order": 4,
+        "percentage": 20.0,
+        "due_trigger": "Days from Booking",
+        "due_days": 270,
+        "is_possession_stage": 0
+      },
+      {
+        "doctype": "RE Payment Plan Stage",
+        "stage_name": "Possession Payment",
+        "stage_order": 5,
+        "percentage": 10.0,
+        "due_trigger": "On Possession",
+        "due_days": 0,
+        "is_possession_stage": 1
+      }
+    ]
+  }
+]

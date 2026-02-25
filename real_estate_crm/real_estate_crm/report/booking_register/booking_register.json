@@ -1,0 +1,10 @@
+{
+  "name": "Booking Register",
+  "doctype": "Report",
+  "report_name": "Booking Register",
+  "report_type": "Script Report",
+  "module": "Real Estate Crm",
+  "is_standard": "Yes",
+  "ref_doctype": "RE Booking",
+  "disabled": 0
+}
