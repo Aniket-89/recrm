@@ -43,7 +43,7 @@ function load_customer_data(page, customer) {
     );
 
     frappe.call({
-        method: "real_estate_crm.page.customer_360.customer_360.get_customer_360_data",
+        method: "real_estate_crm.real_estate_crm.page.customer_360.customer_360.get_customer_360_data",
         args: { customer: customer },
         callback: function (r) {
             if (r.message) {

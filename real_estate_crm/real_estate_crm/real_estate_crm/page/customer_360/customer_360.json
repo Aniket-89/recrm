@@ -2,7 +2,7 @@
   "name": "customer-360",
   "page_name": "customer-360",
   "title": "Customer 360",
-  "module": "Real Estate Crm",
+  "module": "Real Estate CRM",
   "standard": "Yes",
   "roles": [
     {"role": "RE Admin"},

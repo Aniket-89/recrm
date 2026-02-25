@@ -177,7 +177,7 @@ function open_payment_dialog(frm) {
 		primary_action(values) {
 			frappe.call({
 				method:
-					"real_estate_crm.doctype.re_booking.re_booking.receive_payment",
+					"real_estate_crm.real_estate_crm.doctype.re_booking.re_booking.receive_payment",
 				args: {
 					booking_name: frm.doc.name,
 					schedule_row_name: values.schedule_row_name,
@@ -226,7 +226,7 @@ function generate_invoice(frm) {
 		() => {
 			frappe.call({
 				method:
-					"real_estate_crm.doctype.re_booking.re_booking.generate_invoice",
+					"real_estate_crm.real_estate_crm.doctype.re_booking.re_booking.generate_invoice",
 				args: { booking_name: frm.doc.name },
 				freeze: true,
 				freeze_message: __("Creating Sales Invoice…"),

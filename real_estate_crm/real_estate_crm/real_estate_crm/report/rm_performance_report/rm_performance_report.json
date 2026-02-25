@@ -3,7 +3,7 @@
   "doctype": "RE Relationship Manager",
   "report_name": "RM Performance Report",
   "report_type": "Script Report",
-  "module": "Real Estate Crm",
+  "module": "Real Estate CRM",
   "is_standard": "Yes",
   "ref_doctype": "RE Relationship Manager",
   "disabled": 0
