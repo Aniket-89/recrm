@@ -134,7 +134,7 @@ def get_data(filters):
 			FROM `tabRE Booking`
 			WHERE assigned_rm = %(rm_code)s
 				AND docstatus = 1
-				AND status = 'Completed'
+				AND booking_status = 'Completed'
 				{project_condition}
 		""".format(project_condition=project_condition),
 			{"rm_code": rm.rm_code, "project": filters.get("project") if filters else None},
@@ -150,7 +150,7 @@ def get_data(filters):
 			FROM `tabRE Booking`
 			WHERE assigned_rm = %(rm_code)s
 				AND docstatus = 1
-				AND status != 'Cancelled'
+				AND booking_status != 'Cancelled'
 				{project_condition}
 		""".format(project_condition=project_condition),
 			{"rm_code": rm.rm_code, "project": filters.get("project") if filters else None},

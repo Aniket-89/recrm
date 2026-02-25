@@ -141,7 +141,7 @@ function render_action_bar(container, data, customer) {
 
 function show_booking_picker(bookings, callback) {
     let options = bookings.map(
-        (b) => `${b.name} - ${b.plot_label} (${b.project_label})`
+        (b) => `${b.name} - ${b.plot || ""} (${b.project || ""})`
     );
     let d = new frappe.ui.Dialog({
         title: __("Select Booking"),
@@ -169,7 +169,7 @@ function show_booking_picker(bookings, callback) {
 /* ------------------------------------------------------------------ */
 function render_customer_info(container, info) {
     let rm_display = info.rm_name
-        ? `<a href="/app/re-relationship-manager/${encodeURIComponent(info.relationship_manager)}">${info.rm_name}</a>`
+        ? `<a href="/app/re-relationship-manager/${encodeURIComponent(info.assigned_rm)}">${info.rm_name}</a>`
         : '<span class="text-muted">Not Assigned</span>';
 
     let html = `
@@ -275,7 +275,7 @@ function render_bookings(container, bookings, payment_summary) {
     let cards = bookings
         .map((b) => {
             let ps = payment_summary[b.name] || {};
-            let status_color = get_status_color(b.status);
+            let status_color = get_status_color(b.booking_status);
             let next_due =
                 ps.next_due_date
                     ? `${frappe.datetime.str_to_user(ps.next_due_date)} &mdash; ${format_currency(ps.next_due_amount)}`
@@ -289,10 +289,10 @@ function render_bookings(container, bookings, payment_summary) {
                             <a href="/app/re-booking/${encodeURIComponent(b.name)}">${b.name}</a>
                         </h6>
                         <span class="text-muted" style="font-size:0.85em;">
-                            ${b.plot_label} &bull; ${b.project_label}
+                            ${b.plot || ""} &bull; ${b.project || ""}
                         </span>
                     </div>
-                    <span class="indicator-pill ${status_color}">${b.status || "Draft"}</span>
+                    <span class="indicator-pill ${status_color}">${b.booking_status || "Draft"}</span>
                 </div>
 
                 <div class="row" style="font-size:0.9em;">
@@ -305,8 +305,8 @@ function render_bookings(container, bookings, payment_summary) {
                         <div class="font-weight-bold">${b.booking_date ? frappe.datetime.str_to_user(b.booking_date) : "-"}</div>
                     </div>
                     <div class="col-md-3 col-6 mb-2">
-                        <div class="text-muted">Sale Amount</div>
-                        <div class="font-weight-bold">${format_currency(b.total_sale_amount)}</div>
+                        <div class="text-muted">Final Value</div>
+                        <div class="font-weight-bold">${format_currency(b.final_value)}</div>
                     </div>
                     <div class="col-md-3 col-6 mb-2">
                         <div class="text-muted">Next Due</div>
@@ -381,8 +381,8 @@ function render_documents(container, documents) {
                         </div>
                         <div>
                             ${
-                                d.file_url
-                                    ? `<a href="${d.file_url}" target="_blank" class="btn btn-xs btn-default">
+                                d.file
+                                    ? `<a href="${d.file}" target="_blank" class="btn btn-xs btn-default">
                                         <i class="fa fa-eye"></i> View
                                        </a>`
                                     : '<span class="text-muted">No file</span>'
@@ -466,13 +466,12 @@ function format_currency(value) {
 
 function get_status_color(status) {
     let map = {
-        Draft: "orange",
+        Draft: "gray",
         Booked: "blue",
-        Active: "blue",
-        "Payment Ongoing": "yellow",
+        "Payment In Progress": "orange",
+        "Possession Due": "yellow",
         Completed: "green",
         Cancelled: "red",
-        "Possession Handed Over": "green",
     };
     return map[status] || "gray";
 }

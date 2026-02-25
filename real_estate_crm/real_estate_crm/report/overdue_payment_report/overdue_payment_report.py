@@ -104,7 +104,7 @@ def get_data(filters):
 			b.plot AS plot,
 			b.project AS project,
 			ps.stage_name AS stage_name,
-			ps.amount AS amount_due,
+			ps.amount_due AS amount_due,
 			ps.amount_received AS amount_received,
 			ps.balance AS balance,
 			ps.due_date AS due_date

@@ -31,6 +31,11 @@ scheduler_events = {
 # inside their controller classes — no registration needed here.
 # Use doc_events only to hook into NATIVE ERPNext doctypes.
 
+# ─── Client-side extensions for native doctypes ────────────────────────────
+doctype_js = {
+    "Customer": "public/js/customer_custom.js",
+}
+
 doc_events = {
     # Reserved for future use (e.g., Payment Entry hooks if needed)
 }

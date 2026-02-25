@@ -1,6 +1,11 @@
+"""
+Customer 360 — single-screen view of everything about a customer.
+PRD §9.1
+"""
+
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate, nowdate, fmt_money, date_diff
+from frappe.utils import flt, getdate, nowdate, date_diff
 
 
 @frappe.whitelist()
@@ -38,7 +43,7 @@ def _get_customer_info(customer):
         "email": None,
         "mobile": None,
         "address": None,
-        "relationship_manager": None,
+        "assigned_rm": None,
         "rm_name": None,
     }
 
@@ -63,17 +68,17 @@ def _get_customer_info(customer):
         from frappe.contacts.doctype.address.address import get_address_display
         info["address"] = get_address_display(address_name)
 
-    # Relationship Manager from RE Booking (most recent)
+    # Relationship Manager from most recent RE Booking
     rm = frappe.db.get_value(
         "RE Booking",
         {"customer": customer, "docstatus": ["!=", 2]},
-        "relationship_manager",
+        "assigned_rm",
         order_by="creation desc",
     )
     if rm:
-        info["relationship_manager"] = rm
+        info["assigned_rm"] = rm
         info["rm_name"] = frappe.db.get_value(
-            "RE Relationship Manager", rm, "full_name"
+            "RE Relationship Manager", rm, "rm_name"
         )
 
     return info
@@ -81,7 +86,7 @@ def _get_customer_info(customer):
 
 def _get_bookings(customer):
     """Return all RE Bookings for the customer."""
-    bookings = frappe.get_all(
+    return frappe.get_all(
         "RE Booking",
         filters={"customer": customer, "docstatus": ["!=", 2]},
         fields=[
@@ -90,34 +95,29 @@ def _get_bookings(customer):
             "project",
             "payment_plan_type",
             "booking_date",
-            "status",
-            "total_sale_amount",
-            "relationship_manager",
+            "booking_status",
+            "final_value",
+            "assigned_rm",
         ],
         order_by="booking_date desc",
     )
-
-    for b in bookings:
-        b["plot_label"] = b.get("plot") or ""
-        b["project_label"] = b.get("project") or ""
-
-    return bookings
 
 
 def _get_payment_details(booking_name):
     """Calculate payment summary and overdue stages for a booking."""
     schedules = frappe.get_all(
-        "RE Payment Schedule",
+        "RE Booking Payment Schedule",
         filters={"parent": booking_name, "parenttype": "RE Booking"},
         fields=[
             "name",
             "stage_name",
             "due_date",
-            "amount",
-            "received_amount",
+            "amount_due",
+            "amount_received",
+            "balance",
             "status",
         ],
-        order_by="due_date asc",
+        order_by="stage_order asc",
     )
 
     total_due = 0.0
@@ -129,40 +129,39 @@ def _get_payment_details(booking_name):
     today = getdate(nowdate())
 
     for s in schedules:
-        amt = flt(s.get("amount"))
-        received = flt(s.get("received_amount"))
+        amt = flt(s.amount_due)
+        received = flt(s.amount_received)
+        bal = flt(s.balance)
         total_due += amt
         total_received += received
-        outstanding = amt - received
-        total_outstanding += outstanding
+        total_outstanding += bal
 
-        status = (s.get("status") or "").lower()
-        due_date = getdate(s.get("due_date")) if s.get("due_date") else None
+        due_date = getdate(s.due_date) if s.due_date else None
 
         # Overdue detection
-        if due_date and due_date < today and outstanding > 0 and status != "paid":
-            overdue.append(
-                {
-                    "booking": booking_name,
-                    "stage_name": s.get("stage_name"),
-                    "due_date": s.get("due_date"),
-                    "amount": amt,
-                    "received": received,
-                    "outstanding": outstanding,
-                    "days_overdue": date_diff(today, due_date),
-                }
-            )
+        if s.status == "Overdue" or (
+            due_date and due_date < today and bal > 0 and s.status != "Paid"
+        ):
+            overdue.append({
+                "booking": booking_name,
+                "stage_name": s.stage_name,
+                "due_date": str(s.due_date) if s.due_date else None,
+                "amount_due": amt,
+                "received": received,
+                "outstanding": bal,
+                "days_overdue": date_diff(today, due_date) if due_date else 0,
+            })
 
         # Next upcoming due
         if (
             due_date
             and due_date >= today
-            and outstanding > 0
-            and status != "paid"
+            and bal > 0
+            and s.status not in ("Paid", "Cancelled")
             and next_due_date is None
         ):
-            next_due_date = s.get("due_date")
-            next_due_amount = outstanding
+            next_due_date = str(s.due_date)
+            next_due_amount = bal
 
     summary = {
         "total_due": total_due,
@@ -179,19 +178,16 @@ def _get_documents(customer):
     """Collect documents from customer and all bookings (RE Document Entry child table)."""
     documents = []
 
-    # Documents attached to Customer (if the Customer doctype has RE Document Entry child)
-    try:
-        customer_docs = frappe.get_all(
-            "RE Document Entry",
-            filters={"parenttype": "Customer", "parent": customer},
-            fields=["document_type", "document_name", "file_url", "parent", "parenttype"],
-        )
-        for d in customer_docs:
-            d["source"] = "Customer"
-            d["source_name"] = customer
-            documents.append(d)
-    except Exception:
-        pass
+    # Documents attached to Customer
+    customer_docs = frappe.get_all(
+        "RE Document Entry",
+        filters={"parenttype": "Customer", "parent": customer},
+        fields=["document_type", "document_name", "file", "uploaded_on", "remarks"],
+    )
+    for d in customer_docs:
+        d["source"] = "Customer"
+        d["source_name"] = customer
+        documents.append(d)
 
     # Documents from all bookings
     bookings = frappe.get_all(
@@ -200,27 +196,18 @@ def _get_documents(customer):
         pluck="name",
     )
     if bookings:
-        try:
-            booking_docs = frappe.get_all(
-                "RE Document Entry",
-                filters={
-                    "parenttype": "RE Booking",
-                    "parent": ["in", bookings],
-                },
-                fields=[
-                    "document_type",
-                    "document_name",
-                    "file_url",
-                    "parent",
-                    "parenttype",
-                ],
-            )
-            for d in booking_docs:
-                d["source"] = "RE Booking"
-                d["source_name"] = d["parent"]
-                documents.append(d)
-        except Exception:
-            pass
+        booking_docs = frappe.get_all(
+            "RE Document Entry",
+            filters={
+                "parenttype": "RE Booking",
+                "parent": ["in", bookings],
+            },
+            fields=["document_type", "document_name", "file", "uploaded_on", "remarks", "parent"],
+        )
+        for d in booking_docs:
+            d["source"] = "RE Booking"
+            d["source_name"] = d["parent"]
+            documents.append(d)
 
     return documents
 
@@ -232,7 +219,7 @@ def _get_activity(customer):
         filters={
             "reference_doctype": "Customer",
             "reference_name": customer,
-            "comment_type": ["in", ["Comment", "Info", "Edit"]],
+            "comment_type": ["in", ["Comment", "Info"]],
         },
         fields=["comment_by", "content", "creation", "comment_type"],
         order_by="creation desc",
@@ -251,14 +238,11 @@ def _get_activity(customer):
             filters={
                 "reference_doctype": "RE Booking",
                 "reference_name": ["in", bookings],
-                "comment_type": ["in", ["Comment", "Info", "Edit"]],
+                "comment_type": ["in", ["Comment", "Info"]],
             },
             fields=[
-                "comment_by",
-                "content",
-                "creation",
-                "comment_type",
-                "reference_name",
+                "comment_by", "content", "creation",
+                "comment_type", "reference_name",
             ],
             order_by="creation desc",
             limit_page_length=20,
@@ -268,5 +252,5 @@ def _get_activity(customer):
         comments.extend(booking_comments)
 
     # Sort combined by creation desc
-    comments.sort(key=lambda x: x.get("creation"), reverse=True)
+    comments.sort(key=lambda x: x.get("creation") or "", reverse=True)
     return comments[:30]
