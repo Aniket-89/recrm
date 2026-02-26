@@ -8,18 +8,33 @@
 	// Only run for logged-in users on the desk
 	if (!frappe.boot || !frappe.session.user || frappe.session.user === "Guest") return;
 
-	// Wait for page to be ready
+	// Use multiple strategies to ensure sidebar gets built
+	// Strategy 1: Try after DOM is ready
 	$(document).ready(function () {
-		setTimeout(build_sidebar, 300);
+		try_build_sidebar();
 	});
 
-	// Rebuild active state on route change
+	// Strategy 2: Hook into Frappe's route change — fires reliably on every navigation
 	frappe.router.on("change", function () {
+		try_build_sidebar();
 		update_active_item();
 	});
 
-	function build_sidebar() {
+	function try_build_sidebar() {
 		// Don't create duplicate
+		if ($(".re-crm-sidebar").length) return;
+
+		// Wait until the page container is actually rendered
+		if (!$("#body").length && !$(".layout-main").length) {
+			setTimeout(try_build_sidebar, 200);
+			return;
+		}
+
+		build_sidebar();
+	}
+
+	function build_sidebar() {
+		// Double-check no duplicate
 		if ($(".re-crm-sidebar").length) return;
 
 		let sidebar_html = `
@@ -107,9 +122,6 @@
 	}
 
 	function update_active_item() {
-		let current = window.location.pathname + window.location.hash;
-		// Also try just the hash-based route
-		let hash_route = window.location.hash ? window.location.hash.replace("#", "") : "";
 		let path = window.location.pathname;
 
 		$(".re-crm-sidebar .re-sidebar-item").removeClass("active");
@@ -117,13 +129,9 @@
 			let item_route = $(this).data("route");
 			if (!item_route) return;
 
-			// Match on pathname or hash
 			if (
 				path === item_route ||
-				path.startsWith(item_route + "/") ||
-				current.includes(item_route) ||
-				hash_route === item_route ||
-				hash_route.startsWith(item_route + "/")
+				path.startsWith(item_route + "/")
 			) {
 				$(this).addClass("active");
 			}

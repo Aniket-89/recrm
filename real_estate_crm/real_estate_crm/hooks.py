@@ -16,10 +16,10 @@ default_route = "/app/re-dashboard"
 # ─── Global Assets ────────────────────────────────────────────────────────────
 # Loaded on every page — used for the persistent CRM sidebar and styling.
 app_include_js = [
-    "public/js/re_sidebar.js",
+    "/assets/real_estate_crm/js/re_sidebar.js",
 ]
 app_include_css = [
-    "public/css/re_crm.css",
+    "/assets/real_estate_crm/css/re_crm.css",
 ]
 
 # ─── Install / Migrate ───────────────────────────────────────────────────────
