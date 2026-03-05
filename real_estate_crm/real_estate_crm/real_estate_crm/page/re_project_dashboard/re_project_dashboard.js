@@ -58,6 +58,10 @@ function render_project_dashboard(page, data) {
 	let info = data.project_info;
 	page.set_title(info.project_name || info.name);
 
+	page.set_primary_action("Edit Project", () => {
+		frappe.set_route("Form", "RE Project", info.name);
+	}, "edit");
+
 	page.$content.empty();
 	let html = '<div class="re-dash-container">';
 
