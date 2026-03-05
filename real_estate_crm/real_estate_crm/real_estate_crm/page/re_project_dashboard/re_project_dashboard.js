@@ -1,7 +1,7 @@
-frappe.pages["re-dashboard"].on_page_load = function (wrapper) {
+frappe.pages["re-project-dashboard"].on_page_load = function (wrapper) {
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
-		title: "Real Estate Dashboard",
+		title: "Project Dashboard",
 		single_column: true,
 	});
 
@@ -9,29 +9,43 @@ frappe.pages["re-dashboard"].on_page_load = function (wrapper) {
 	$('<div class="re-dashboard-content"></div>').appendTo(page.main);
 	page.$content = page.main.find(".re-dashboard-content");
 
-	page.set_secondary_action("Refresh", () => load_dashboard(page), "refresh");
+	page.set_secondary_action("Refresh", () => load_project_dashboard(page), "refresh");
 };
 
-frappe.pages["re-dashboard"].on_page_show = function (wrapper) {
+frappe.pages["re-project-dashboard"].on_page_show = function (wrapper) {
 	let page = wrapper.page;
-	load_dashboard(page);
+	load_project_dashboard(page);
 };
 
-function load_dashboard(page) {
+function get_project_from_route() {
+	let route = frappe.get_route();
+	return route.length > 1 ? route[1] : null;
+}
+
+function load_project_dashboard(page) {
+	let project = get_project_from_route();
+	if (!project) {
+		page.$content.html(
+			'<div class="re-dash-loading"><i class="fa fa-exclamation-triangle text-warning fa-2x"></i><p class="mt-3 text-muted">No project specified. <a href="/app/re-dashboard">Go to Home Dashboard</a></p></div>'
+		);
+		return;
+	}
+
 	page.$content.html(
-		'<div class="re-dash-loading"><div class="spinner-border text-primary"></div><p class="text-muted mt-3">Loading dashboard&hellip;</p></div>'
+		'<div class="re-dash-loading"><div class="spinner-border text-primary"></div><p class="text-muted mt-3">Loading project dashboard&hellip;</p></div>'
 	);
 
 	frappe.call({
-		method: "real_estate_crm.real_estate_crm.page.re_dashboard.re_dashboard.get_dashboard_data",
+		method: "real_estate_crm.real_estate_crm.page.re_project_dashboard.re_project_dashboard.get_project_dashboard_data",
+		args: { project: project },
 		callback: function (r) {
 			if (r.message) {
-				render_dashboard(page, r.message);
+				render_project_dashboard(page, r.message);
 			}
 		},
 		error: function () {
 			page.$content.html(
-				'<div class="re-dash-loading"><i class="fa fa-exclamation-triangle text-danger fa-2x"></i><p class="mt-3 text-muted">Failed to load dashboard data.</p></div>'
+				'<div class="re-dash-loading"><i class="fa fa-exclamation-triangle text-danger fa-2x"></i><p class="mt-3 text-muted">Failed to load project dashboard.</p></div>'
 			);
 		},
 	});
@@ -40,14 +54,23 @@ function load_dashboard(page) {
 /* ================================================================== */
 /*  MASTER RENDER                                                      */
 /* ================================================================== */
-function render_dashboard(page, data) {
-	page.$content.empty();
+function render_project_dashboard(page, data) {
+	let info = data.project_info;
+	page.set_title(info.project_name || info.name);
 
+	page.$content.empty();
 	let html = '<div class="re-dash-container">';
-	html += render_greeting();
-	html += render_kpi_cards(data.kpi_cards);
-	html += render_project_summary(data.project_summary);
-	html += render_collections_chart(data.monthly_collections);
+
+	html += render_project_header(info);
+	html += render_project_kpi_cards(data.kpi_cards);
+
+	html += '<div class="re-dash-row">';
+	html += '<div class="re-dash-col-6">' + render_plot_chart() + "</div>";
+	html += '<div class="re-dash-col-6">' + render_collections_chart() + "</div>";
+	html += "</div>";
+
+	html += render_plot_inventory(data.plot_inventory);
+	html += render_assigned_rms(data.assigned_rms);
 
 	html += '<div class="re-dash-row">';
 	html += '<div class="re-dash-col-6">' + render_overdue_payments(data.overdue_payments) + "</div>";
@@ -55,51 +78,47 @@ function render_dashboard(page, data) {
 	html += "</div>";
 
 	html += render_recent_bookings(data.recent_bookings);
+
 	html += "</div>";
 	page.$content.html(html);
 
 	setTimeout(() => {
+		draw_plot_donut(data.plot_status_breakdown);
 		draw_collections_bar(data.monthly_collections);
 	}, 100);
 }
 
 /* ================================================================== */
-/*  GREETING                                                           */
+/*  PROJECT HEADER                                                     */
 /* ================================================================== */
-function render_greeting() {
-	let hour = new Date().getHours();
-	let greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
-	let user = frappe.session.user_fullname || "there";
+function render_project_header(info) {
+	let status_colors = { Active: "green", Completed: "blue", "On Hold": "yellow" };
+	let color = status_colors[info.status] || "gray";
+	let location = [info.location, info.city, info.state].filter(Boolean).join(", ");
 
 	return `
 	<div class="re-dash-greeting">
-		<h3>${greeting}, ${user}</h3>
-		<p class="text-muted">Here's your real estate overview for today.</p>
+		<a href="/app/re-dashboard" class="re-dash-link" style="font-size:0.85em;">
+			<i class="fa fa-arrow-left"></i> Back to Home Dashboard
+		</a>
+		<h3 style="margin-top:8px;">${info.project_name || info.name}
+			<span class="indicator-pill ${color}" style="font-size:0.5em; vertical-align:middle;">${info.status}</span>
+		</h3>
+		${location ? `<p class="text-muted"><i class="fa fa-map-marker"></i> ${location}</p>` : ""}
 	</div>`;
 }
 
 /* ================================================================== */
 /*  KPI CARDS                                                          */
 /* ================================================================== */
-function render_kpi_cards(kpi) {
+function render_project_kpi_cards(kpi) {
 	let cards = [
+		{ label: "Total Plots", value: kpi.total_plots, icon: "fa-map-marker", color: "#2490ef" },
+		{ label: "Available", value: kpi.available, icon: "fa-check-circle", color: "#29cd42" },
+		{ label: "Booked", value: kpi.booked, icon: "fa-bookmark", color: "#2490ef" },
+		{ label: "Registered", value: kpi.registered, icon: "fa-file-text", color: "#7c3aed" },
 		{
-			label: "Projects",
-			value: kpi.total_projects,
-			icon: "fa-folder-open",
-			color: "#2490ef",
-			subtitle: kpi.active_projects + " active",
-			link: "/app/re-project",
-		},
-		{
-			label: "Active Bookings",
-			value: kpi.active_bookings,
-			icon: "fa-bookmark",
-			color: "#7c3aed",
-			link: "/app/re-booking?booking_status=%5B%22in%22%2C%5B%22Booked%22%2C%22Payment+In+Progress%22%2C%22Possession+Due%22%5D%5D",
-		},
-		{
-			label: "Total Revenue",
+			label: "Revenue",
 			value: format_compact_currency(kpi.total_revenue),
 			icon: "fa-line-chart",
 			color: "#2490ef",
@@ -117,22 +136,19 @@ function render_kpi_cards(kpi) {
 			value: format_compact_currency(kpi.total_outstanding),
 			icon: "fa-clock-o",
 			color: "#ecaa00",
-			subtitle: "Pending collection",
 		},
 		{
 			label: "Overdue",
 			value: format_compact_currency(kpi.overdue_amount),
 			icon: "fa-exclamation-triangle",
 			color: kpi.overdue_amount > 0 ? "#e24c4c" : "#98a1b3",
-			link: "/app/query-report/Overdue Payment Report",
 		},
 	];
 
 	let html = '<div class="re-dash-kpi-grid">';
 	cards.forEach((c) => {
-		let clickable = c.link ? ` onclick="frappe.set_route('${c.link}')" style="cursor:pointer;"` : "";
 		html += `
-		<div class="re-dash-kpi-card"${clickable}>
+		<div class="re-dash-kpi-card">
 			<div class="re-dash-kpi-icon" style="background:${c.color}15; color:${c.color};">
 				<i class="fa ${c.icon}"></i>
 			</div>
@@ -148,9 +164,53 @@ function render_kpi_cards(kpi) {
 }
 
 /* ================================================================== */
+/*  PLOT STATUS DONUT CHART                                            */
+/* ================================================================== */
+function render_plot_chart() {
+	return `
+	<div class="re-dash-card">
+		<div class="re-dash-card-header"><h6>Plot Inventory</h6></div>
+		<div class="re-dash-card-body">
+			<div id="re-plot-chart" style="height:240px;"></div>
+			<div class="re-dash-chart-legend" id="re-plot-legend"></div>
+		</div>
+	</div>`;
+}
+
+function draw_plot_donut(breakdown) {
+	if (!breakdown || !breakdown.length) {
+		$("#re-plot-chart").html('<p class="text-muted text-center" style="padding-top:80px;">No plot data yet.</p>');
+		return;
+	}
+
+	let colors = { Available: "#29cd42", Booked: "#2490ef", Registered: "#7c3aed", "On Hold": "#ecaa00" };
+	let labels = breakdown.map((d) => d.status);
+	let values = breakdown.map((d) => d.count);
+	let chartColors = breakdown.map((d) => colors[d.status] || "#98a1b3");
+
+	new frappe.Chart("#re-plot-chart", {
+		data: { labels: labels, datasets: [{ values: values }] },
+		type: "donut",
+		height: 220,
+		colors: chartColors,
+	});
+
+	let legendHtml = breakdown
+		.map(
+			(d) => `
+		<span class="re-dash-legend-item">
+			<span class="re-dash-legend-dot" style="background:${colors[d.status] || "#98a1b3"};"></span>
+			${d.status}: <strong>${d.count}</strong>
+		</span>`
+		)
+		.join("");
+	$("#re-plot-legend").html(legendHtml);
+}
+
+/* ================================================================== */
 /*  MONTHLY COLLECTIONS BAR CHART                                      */
 /* ================================================================== */
-function render_collections_chart(collections) {
+function render_collections_chart() {
 	return `
 	<div class="re-dash-card">
 		<div class="re-dash-card-header">
@@ -194,39 +254,31 @@ function draw_collections_bar(collections) {
 }
 
 /* ================================================================== */
-/*  PROJECT SUMMARY TABLE                                              */
+/*  PLOT INVENTORY TABLE                                               */
 /* ================================================================== */
-function render_project_summary(projects) {
-	if (!projects || !projects.length) {
+function render_plot_inventory(plots) {
+	if (!plots || !plots.length) {
 		return `
 		<div class="re-dash-card">
-			<div class="re-dash-card-header"><h6>Projects Overview</h6></div>
-			<div class="re-dash-card-body"><p class="text-muted text-center">No projects yet.</p></div>
+			<div class="re-dash-card-header"><h6>Plot Inventory</h6></div>
+			<div class="re-dash-card-body"><p class="text-muted text-center">No plots in this project.</p></div>
 		</div>`;
 	}
 
-	let rows = projects
-		.map((p) => {
-			let pct = p.total_plots > 0 ? Math.round(((p.booked + p.registered) / p.total_plots) * 100) : 0;
-			let collection_pct = p.revenue > 0 ? Math.round((p.collected / p.revenue) * 100) : 0;
+	let status_colors = { Available: "green", Booked: "blue", Registered: "purple", "On Hold": "yellow" };
+
+	let rows = plots
+		.map((pl) => {
+			let color = status_colors[pl.status] || "gray";
 			return `
-			<tr onclick="frappe.set_route('/app/re-project-dashboard/${encodeURIComponent(p.project)}')" style="cursor:pointer;">
-				<td>
-					<strong>${p.project_name || p.project}</strong>
-					${p.city ? `<br><small class="text-muted">${p.city}</small>` : ""}
-				</td>
-				<td class="text-center">${p.total_plots}</td>
-				<td class="text-center"><span class="re-dash-badge green">${p.available}</span></td>
-				<td class="text-center"><span class="re-dash-badge blue">${p.booked}</span></td>
-				<td class="text-center"><span class="re-dash-badge purple">${p.registered}</span></td>
-				<td class="text-right">${format_compact_currency(p.revenue)}</td>
-				<td class="text-right">${collection_pct}%</td>
-				<td>
-					<div class="re-dash-progress">
-						<div class="re-dash-progress-bar" style="width:${pct}%;"></div>
-					</div>
-					<small class="text-muted">${pct}% sold</small>
-				</td>
+			<tr>
+				<td><a href="/app/re-plot/${encodeURIComponent(pl.name)}">${pl.plot_number}</a></td>
+				<td>${pl.sector || "-"}</td>
+				<td>${pl.plot_type || "-"}</td>
+				<td class="text-right">${pl.plot_area} ${pl.area_unit}</td>
+				<td class="text-right">${format_compact_currency(pl.total_value)}</td>
+				<td><span class="re-dash-badge ${color}">${pl.status}</span></td>
+				<td>${pl.customer || "-"}</td>
 			</tr>`;
 		})
 		.join("");
@@ -234,28 +286,63 @@ function render_project_summary(projects) {
 	return `
 	<div class="re-dash-card">
 		<div class="re-dash-card-header">
-			<h6>Projects Overview</h6>
-			<a href="/app/re-project" class="re-dash-link">View All</a>
+			<h6>Plot Inventory</h6>
+			<span class="text-muted" style="font-size:0.8em;">${plots.length} plots</span>
 		</div>
 		<div class="re-dash-card-body">
 			<div class="table-responsive">
 				<table class="re-dash-table">
 					<thead>
 						<tr>
-							<th>Project</th>
-							<th class="text-center">Plots</th>
-							<th class="text-center">Available</th>
-							<th class="text-center">Booked</th>
-							<th class="text-center">Registered</th>
-							<th class="text-right">Revenue</th>
-							<th class="text-right">Collected</th>
-							<th>Progress</th>
+							<th>Plot #</th>
+							<th>Sector</th>
+							<th>Type</th>
+							<th class="text-right">Area</th>
+							<th class="text-right">Value</th>
+							<th>Status</th>
+							<th>Customer</th>
 						</tr>
 					</thead>
 					<tbody>${rows}</tbody>
 				</table>
 			</div>
 		</div>
+	</div>`;
+}
+
+/* ================================================================== */
+/*  ASSIGNED RMs                                                       */
+/* ================================================================== */
+function render_assigned_rms(rms) {
+	if (!rms || !rms.length) {
+		return `
+		<div class="re-dash-card">
+			<div class="re-dash-card-header"><h6>Assigned Relationship Managers</h6></div>
+			<div class="re-dash-card-body"><p class="text-muted text-center">No RMs assigned to this project.</p></div>
+		</div>`;
+	}
+
+	let rows = rms
+		.map(
+			(rm) => `
+		<div class="re-dash-list-item">
+			<div class="re-dash-list-main">
+				<a href="/app/re-relationship-manager/${encodeURIComponent(rm.name)}" class="re-dash-list-title">${rm.rm_name}</a>
+				<div class="re-dash-list-meta">${rm.designation || "RM"} ${rm.mobile ? "&bull; " + rm.mobile : ""}</div>
+			</div>
+			<div class="re-dash-list-right">
+				<span class="re-dash-badge blue">${rm.booking_count} bookings</span>
+			</div>
+		</div>`
+		)
+		.join("");
+
+	return `
+	<div class="re-dash-card">
+		<div class="re-dash-card-header">
+			<h6>Assigned Relationship Managers</h6>
+		</div>
+		<div class="re-dash-card-body re-dash-list">${rows}</div>
 	</div>`;
 }
 
@@ -296,7 +383,6 @@ function render_overdue_payments(overdues) {
 	<div class="re-dash-card re-dash-card-danger">
 		<div class="re-dash-card-header">
 			<h6><i class="fa fa-exclamation-triangle text-danger"></i> Overdue Payments</h6>
-			<a href="/app/query-report/Overdue Payment Report" class="re-dash-link">View Report</a>
 		</div>
 		<div class="re-dash-card-body re-dash-list">${rows}</div>
 	</div>`;
@@ -373,7 +459,6 @@ function render_recent_bookings(bookings) {
 				<td><a href="/app/re-booking/${encodeURIComponent(b.name)}">${b.name}</a></td>
 				<td>${frappe.datetime.str_to_user(b.booking_date)}</td>
 				<td>${b.customer || "-"}</td>
-				<td>${b.project || "-"}</td>
 				<td>${b.plot || "-"}</td>
 				<td class="text-right">${format_compact_currency(b.final_value)}</td>
 				<td><span class="indicator-pill ${color}">${b.booking_status || "Draft"}</span></td>
@@ -385,7 +470,6 @@ function render_recent_bookings(bookings) {
 	<div class="re-dash-card">
 		<div class="re-dash-card-header">
 			<h6>Recent Bookings</h6>
-			<a href="/app/re-booking" class="re-dash-link">View All</a>
 		</div>
 		<div class="re-dash-card-body">
 			<div class="table-responsive">
@@ -395,7 +479,6 @@ function render_recent_bookings(bookings) {
 							<th>Booking</th>
 							<th>Date</th>
 							<th>Customer</th>
-							<th>Project</th>
 							<th>Plot</th>
 							<th class="text-right">Value</th>
 							<th>Status</th>

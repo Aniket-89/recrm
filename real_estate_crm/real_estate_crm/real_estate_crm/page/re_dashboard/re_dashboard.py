@@ -15,21 +15,20 @@ def get_dashboard_data():
     """Main API — returns all dashboard sections in one call."""
     data = {}
     data["kpi_cards"] = _get_kpi_cards()
-    data["plot_status_breakdown"] = _get_plot_status_breakdown()
+    data["project_summary"] = _get_project_summary()
+    data["monthly_collections"] = _get_monthly_collections()
     data["recent_bookings"] = _get_recent_bookings()
     data["overdue_payments"] = _get_overdue_payments()
     data["upcoming_dues"] = _get_upcoming_dues()
-    data["project_summary"] = _get_project_summary()
-    data["monthly_collections"] = _get_monthly_collections()
     return data
 
 
 def _get_kpi_cards():
-    """Top-level KPI numbers."""
+    """Top-level KPI numbers — project-focused."""
     total_projects = frappe.db.count("RE Project")
-    total_plots = frappe.db.count("RE Plot")
-    available_plots = frappe.db.count("RE Plot", {"status": "Available"})
-    booked_plots = frappe.db.count("RE Plot", {"status": "Booked"})
+    active_projects = frappe.db.count("RE Project", {"status": "Active"})
+    completed_projects = frappe.db.count("RE Project", {"status": "Completed"})
+    on_hold_projects = frappe.db.count("RE Project", {"status": "On Hold"})
 
     active_bookings = frappe.db.count(
         "RE Booking",
@@ -76,19 +75,16 @@ def _get_kpi_cards():
         as_dict=True,
     )[0].total
 
-    total_customers = frappe.db.count("Customer")
-
     return {
         "total_projects": total_projects,
-        "total_plots": total_plots,
-        "available_plots": available_plots,
-        "booked_plots": booked_plots,
+        "active_projects": active_projects,
+        "completed_projects": completed_projects,
+        "on_hold_projects": on_hold_projects,
         "active_bookings": active_bookings,
         "total_revenue": flt(total_revenue),
         "total_received": flt(total_received),
         "total_outstanding": flt(total_outstanding),
         "overdue_amount": flt(overdue_amount),
-        "total_customers": total_customers,
     }
 
 
@@ -181,12 +177,15 @@ def _get_upcoming_dues(limit=5):
 
 
 def _get_project_summary():
-    """Per-project plot breakdown."""
+    """Per-project plot breakdown with financial summary."""
     summary = frappe.db.sql(
         """
         SELECT
             p.name as project,
             p.project_name,
+            p.status as project_status,
+            p.location,
+            p.city,
             COUNT(pl.name) as total_plots,
             SUM(CASE WHEN pl.status = 'Available' THEN 1 ELSE 0 END) as available,
             SUM(CASE WHEN pl.status = 'Booked' THEN 1 ELSE 0 END) as booked,
@@ -194,11 +193,29 @@ def _get_project_summary():
             SUM(CASE WHEN pl.status = 'On Hold' THEN 1 ELSE 0 END) as on_hold
         FROM `tabRE Project` p
         LEFT JOIN `tabRE Plot` pl ON pl.project = p.name
-        GROUP BY p.name, p.project_name
+        GROUP BY p.name, p.project_name, p.status, p.location, p.city
         ORDER BY p.project_name
         """,
         as_dict=True,
     )
+
+    for row in summary:
+        rev = frappe.db.sql(
+            """
+            SELECT
+                COALESCE(SUM(b.final_value), 0) as revenue,
+                COALESCE(SUM(ps.amount_received), 0) as collected
+            FROM `tabRE Booking` b
+            LEFT JOIN `tabRE Booking Payment Schedule` ps ON ps.parent = b.name
+            WHERE b.project = %s
+              AND b.booking_status NOT IN ('Cancelled', 'Draft')
+            """,
+            (row.project,),
+            as_dict=True,
+        )[0]
+        row["revenue"] = flt(rev.revenue)
+        row["collected"] = flt(rev.collected)
+
     return summary or []
 
 

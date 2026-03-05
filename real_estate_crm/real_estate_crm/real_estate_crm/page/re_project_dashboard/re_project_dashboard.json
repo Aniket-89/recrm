@@ -1,0 +1,16 @@
+{
+  "name": "re-project-dashboard",
+  "doctype": "Page",
+  "page_name": "re-project-dashboard",
+  "title": "Project Dashboard",
+  "module": "Real Estate CRM",
+  "standard": "Yes",
+  "roles": [
+    {"role": "RE Admin"},
+    {"role": "RE Sales Manager"},
+    {"role": "RE Sales Executive"},
+    {"role": "RE Accounts"},
+    {"role": "RE RM"},
+    {"role": "System Manager"}
+  ]
+}
