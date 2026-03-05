@@ -27,6 +27,11 @@ function build_sidebar() {
 			<i class="fa fa-building"></i> Real Estate CRM
 		</div>
 
+		<a class="re-sidebar-item re-sidebar-search" style="background:var(--bg-light-gray, #f1f5f9); margin: 4px 10px; border-radius: 6px; padding: 8px 14px;">
+			<i class="fa fa-search"></i> Search
+			<kbd style="margin-left:auto; background:var(--card-bg,#fff); border:1px solid var(--border-color,#e2e8f0); border-radius:3px; padding:1px 5px; font-size:0.75em; color:var(--text-muted);">Ctrl+K</kbd>
+		</a>
+
 		<a class="re-sidebar-item" data-route="/app/re-dashboard">
 			<i class="fa fa-tachometer"></i> Dashboard
 		</a>
@@ -98,6 +103,14 @@ function build_sidebar() {
 		if (route) {
 			frappe.set_route(route);
 			$(".re-crm-sidebar").removeClass("re-sidebar-open");
+		}
+	});
+
+	// Search icon handler
+	$(".re-crm-sidebar .re-sidebar-search").on("click", function (e) {
+		e.preventDefault();
+		if (window.re_open_global_search) {
+			window.re_open_global_search();
 		}
 	});
 
