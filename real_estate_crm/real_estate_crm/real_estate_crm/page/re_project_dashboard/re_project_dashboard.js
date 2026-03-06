@@ -59,6 +59,7 @@ function render_project_dashboard(page, data) {
 	page.set_title(info.project_name || info.name);
 
 	page.set_primary_action("Edit Project", () => {
+		frappe._re_edit_project = true;
 		frappe.set_route("Form", "RE Project", info.name);
 	}, "edit");
 
